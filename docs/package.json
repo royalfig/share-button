@@ -13,7 +13,7 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
-    "@royalfig/share-button": "^0.0.30",
+    "@royalfig/share-button": "^0.0.31",
     "emoji-picker-element": "^1.21.0",
     "highlight.js": "^11.9.0"
   }
