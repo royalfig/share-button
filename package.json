@@ -32,7 +32,7 @@
     "prerelease": "git commit -am 'publish' && npm version patch && git push && git push --tags"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.0",
+    "@biomejs/biome": "1.9.4",
     "stylelint": "^16.6.1",
     "stylelint-config-recess-order": "^5.0.1",
     "stylelint-config-standard": "^36.0.0",
