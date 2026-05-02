@@ -40,6 +40,16 @@ features:
 }
 </style>
 
-<div style="display:flex;justify-content:center;padding:2rem 0">
-  <share-button></share-button>
-</div>
+<script setup>
+import { onMounted } from 'vue'
+onMounted(() => {
+  const actions = document.querySelector('.VPHero .actions')
+  if (actions) {
+    const wrapper = document.createElement('div')
+    wrapper.className = 'action'
+    actions.appendChild(wrapper)
+    const btn = document.createElement('share-button')
+    wrapper.appendChild(btn)
+  }
+})
+</script>
