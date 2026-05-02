@@ -10,5 +10,5 @@ export default defineConfig({
 			fileName: (format) => `share-button.${format}.js`,
 		},
 	},
-	plugins: [dts({ rollupTypes: true })],
+	plugins: [dts()],
 });
