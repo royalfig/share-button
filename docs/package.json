@@ -9,5 +9,6 @@
   },
   "dependencies": {
     "@royalfig/share-button": "^1.0.34"
-  }
+  },
+  "version": "0.0.1"
 }
