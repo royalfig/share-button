@@ -39,3 +39,12 @@ features:
   --vp-home-hero-name-background: linear-gradient(120deg in oklch, #EA8824, #8FA402, #F02C69, #BE16FD, #370E9F  );
 }
 </style>
+
+<script setup>
+import { onMounted } from 'vue'
+onMounted(() => {
+  const btn = document.createElement('share-button')
+  btn.setAttribute('fixed', 'right')
+  document.body.appendChild(btn)
+})
+</script>
