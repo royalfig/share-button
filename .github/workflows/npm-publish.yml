@@ -35,4 +35,6 @@ jobs:
         run: |
           gh release create ${{ github.ref_name }} \
             --title "Release ${{ github.ref_name }}" \
-            --generate-notes
+            --generate-notes \
+            dist/share-button.umd.js \
+            dist/share-button.es.js
