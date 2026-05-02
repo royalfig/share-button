@@ -40,11 +40,6 @@ features:
 }
 </style>
 
-<script setup>
-import { onMounted } from 'vue'
-onMounted(() => {
-  const btn = document.createElement('share-button')
-  btn.setAttribute('fixed', 'right')
-  document.body.appendChild(btn)
-})
-</script>
+<div style="display:flex;justify-content:center;padding:2rem 0">
+  <share-button></share-button>
+</div>
