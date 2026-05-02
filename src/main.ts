@@ -1,17 +1,10 @@
 import { createDarkModeStyles } from "./dark-mode";
 import { createPopoverContent } from "./popover";
-import { copiedIcon, icons } from "./icons";
+import { icons } from "./icons";
 import style from "./style.css?inline";
 import { createUserStyles } from "./user-styles";
 
-type PopoverCoords = {
-	top: number;
-	left: number;
-	width: number;
-	height: number;
-} | null;
-
-export class ShareButton extends HTMLElement {
+class ShareButton extends HTMLElement {
 	isPopoverSupport = Object.hasOwn(HTMLElement.prototype, "popover");
 	isMobile =
 		(/android/i.test(navigator.userAgent) ||
@@ -19,14 +12,52 @@ export class ShareButton extends HTMLElement {
 		navigator.share;
 	shadow = this.attachShadow({ mode: "open" });
 	state = false;
-	static observedAttributes = ["dark-mode"];
+private _connected = false;
+		private _renderRequested = false;
+		private _clickHandler: ((e: Event) => void) | null = null;
+	private _resizeHandler: (() => void) | null = null;
+	private _scrollHandler: (() => void) | null = null;
+	private _stylesheet: CSSStyleSheet | null = null;
+
+	static get observedAttributes() {
+		return ["dark-mode"];
+	}
+
+	get darkMode(): string | null {
+		return this.getAttribute("dark-mode");
+	}
+
+	set darkMode(value: string | null) {
+		this.setAttribute("dark-mode", value ?? "");
+	}
 
 	connectedCallback(): void {
+		this._connected = true;
 		this.render();
 	}
 
-	attributeChangedCallback() {
+	disconnectedCallback(): void {
+		this._connected = false;
+		if (this._clickHandler) {
+			const button = this.shadow?.querySelector(".share-button");
+			button?.removeEventListener("click", this._clickHandler);
+			this._clickHandler = null;
+		}
+		this._resizeHandler && removeEventListener("resize", this._resizeHandler);
+		this._scrollHandler && removeEventListener("scroll", this._scrollHandler);
+	}
+
+	attributeChangedCallback(_attrName: string, oldVal: string | null, newVal: string | null) {
+		if (oldVal === newVal) return;
+		if (!this._connected) return;
 		this.render();
+	}
+
+	private _closePopover() {
+		const popover = this.shadow?.querySelector("[popover]") as HTMLElement | undefined;
+		if (popover && popover.popoverState === "open") {
+			popover.hidePopover();
+		}
 	}
 
 	render() {
@@ -39,29 +70,36 @@ export class ShareButton extends HTMLElement {
 		const icon = this.createIcon();
 		const isAtomic = this.hasAttribute("atomic");
 		const popover = this.createPopover(title, isAtomic);
-		const button = isAtomic ? "" : this.createButton(icon);
+		const button = isAtomic ? null : this.createButton(icon);
 
-		// dark mode
 		const darkModeStyles = createDarkModeStyles(this);
 
-		// styles
-		const styles = new CSSStyleSheet();
-		styles.replaceSync(style + userStyles + darkModeStyles);
-		this.shadow.adoptedStyleSheets = [styles];
+		if (!this._stylesheet) {
+			this._stylesheet = new CSSStyleSheet();
+		}
+		this._stylesheet.replaceSync(style + userStyles + darkModeStyles);
+		this.shadow.adoptedStyleSheets = [this._stylesheet];
 
 		const wrapper = document.createElement("div");
 		wrapper.setAttribute("class", "wrapper");
 		wrapper.setAttribute("part", "share-wrapper");
-		const contentEl = this.isPopoverSupport ? popover : "<div></div>";
-		wrapper.append(button, contentEl);
+
+		if (this.isPopoverSupport) {
+			wrapper.append(popover);
+		} else {
+			const fallbackDiv = document.createElement("div");
+			wrapper.append(fallbackDiv);
+		}
+
+		if (button) {
+			wrapper.append(button);
+		}
+
 		this.shadow.replaceChildren(wrapper);
-		let popoverCoords: PopoverCoords = null;
 
 		if (!isAtomic && button) {
-			button.addEventListener("click", (e) => {
+			const clickHandler = async (e: Event) => {
 				const target = e.currentTarget as Element;
-
-				// if mobile and share is supported
 
 				if (this.isMobile) {
 					try {
@@ -69,63 +107,52 @@ export class ShareButton extends HTMLElement {
 							title,
 							url: window.location.href,
 						});
-						target.removeAttribute("popover");
+						this.dispatchEvent(new CustomEvent("share-button-share", {
+							bubbles: true,
+							detail: { network: "native", url: window.location.href },
+						}));
+						const mobilePopover = this.shadow?.querySelector("[popover]") as HTMLElement | undefined;
+						mobilePopover?.hidePopover();
 					} catch (err) {
 						console.log(err);
 					}
-
 					return;
 				}
 
 				if (this.isPopoverSupport) {
-					const popoverClone = popover.cloneNode(true) as HTMLElement;
+const popoverClone = popover.cloneNode(true) as HTMLElement;
 					popoverClone.removeAttribute("id");
 					popoverClone.removeAttribute("popover");
 					wrapper.append(popoverClone);
 					popoverClone.style.visibility = "hidden";
 					popoverClone.style.pointerEvents = "none";
 					popoverClone.classList.add("up", "popover-clone");
-					popoverCoords = popoverClone.getBoundingClientRect();
+					const popoverWidth = popoverClone.getBoundingClientRect().width;
+					const popoverHeight = popoverClone.getBoundingClientRect().height;
 					popoverClone.remove();
+
 					const buttonCoords = target.getBoundingClientRect();
-					let left = `${
-						buttonCoords.left + buttonCoords.width / 2 - popoverCoords.width / 2
-					}px`;
+					let left = `${buttonCoords.left + buttonCoords.width / 2 - popoverWidth / 2}px`;
 
 					if (buttonCoords.left < 100) {
-						left = `${
-							buttonCoords.left +
-							buttonCoords.width / 2 -
-							popoverCoords.width * 0.25
-						}px`;
+						left = `${buttonCoords.left + buttonCoords.width / 2 - popoverWidth * 0.25}px`;
 						popover.classList.add("left-adjust");
 					}
 
 					if (buttonCoords.right > window.innerWidth - 100) {
-						left = `${
-							buttonCoords.left +
-							buttonCoords.width / 2 -
-							popoverCoords.width * 0.75
-						}px`;
+						left = `${buttonCoords.left + buttonCoords.width / 2 - popoverWidth * 0.75}px`;
 						popover.classList.add("right-adjust");
 					}
 
 					const scrollY = window.scrollY;
-
 					popover.style.left = left;
 
 					if (document.documentElement.clientHeight / 2 > buttonCoords.y) {
-						// PUT below
-						popover.style.top = `${
-							scrollY + buttonCoords.top + buttonCoords.height
-						}px`;
+						popover.style.top = `${scrollY + buttonCoords.top + buttonCoords.height}px`;
 						popover.classList.remove("down");
 						popover.classList.add("up");
 					} else {
-						// PUT above
-						popover.style.top = `${
-							scrollY + buttonCoords.top - popoverCoords.height
-						}px`;
+						popover.style.top = `${scrollY + buttonCoords.top - popoverHeight}px`;
 						popover.classList.remove("up");
 						popover.classList.add("down");
 					}
@@ -133,22 +160,49 @@ export class ShareButton extends HTMLElement {
 					return;
 				}
 
-				navigator.clipboard.writeText(window.location.href);
-				setTimeout(() => {
-					this.textContent = "Copied!";
-					this.createButton(copiedIcon);
-				}, 1000);
-			});
+				try {
+					await navigator.clipboard.writeText(window.location.href);
+					this.dispatchEvent(new CustomEvent("share-button-copy", {
+						bubbles: true,
+						detail: { url: window.location.href },
+					}));
+					const copySuccessIndicator = document.createElement("span");
+					copySuccessIndicator.setAttribute("part", "copy-success");
+					copySuccessIndicator.textContent = "Copied!";
+					setTimeout(() => {
+						copySuccessIndicator.remove();
+					}, 1000);
+				} catch {
+					const copyFailIndicator = document.createElement("span");
+					copyFailIndicator.setAttribute("part", "copy-error");
+					copyFailIndicator.textContent = "Copy failed";
+					copyFailIndicator.style.color = "#e53e3e";
+					setTimeout(() => {
+						copyFailIndicator.remove();
+					}, 2000);
+				}
+			};
+
+			if (this._clickHandler) {
+				button.removeEventListener("click", this._clickHandler);
+			}
+
+			this._clickHandler = clickHandler;
+			button.addEventListener("click", clickHandler);
 		}
 
 		if (!isAtomic) {
-			const closePopover = () => {
-				const popover = this.shadow.querySelector("[popover]") as HTMLElement;
-				popover.hidePopover();
-			};
+			if (!this._resizeHandler) {
+				this._resizeHandler = () => this._closePopover();
+			}
+			if (!this._scrollHandler) {
+				this._scrollHandler = () => this._closePopover();
+			}
 
-			addEventListener("resize", closePopover);
-			addEventListener("scroll", closePopover);
+			removeEventListener("resize", this._resizeHandler);
+			removeEventListener("scroll", this._scrollHandler);
+			addEventListener("resize", this._resizeHandler);
+			addEventListener("scroll", this._scrollHandler);
 		}
 	}
 
@@ -178,18 +232,17 @@ export class ShareButton extends HTMLElement {
 
 		if (this.isPopoverSupport && !this.isMobile) {
 			button.setAttribute("popovertarget", "share-popover");
+			button.setAttribute("aria-haspopup", "dialog");
 		}
 
 		const isCircle = this.hasAttribute("circle");
 
 		if (isCircle || isNoText) {
 			button.setAttribute("aria-label", "Share");
-
 			button.innerHTML = icon;
 		} else {
-			button.innerHTML = `${icon} ${
-				this.textContent ? "<slot></slot>" : "Share"
-			}`;
+			const slotContent = this.textContent ? "<slot></slot>" : "Share";
+			button.innerHTML = `${icon} ${slotContent}`;
 		}
 		return button;
 	}
@@ -204,6 +257,7 @@ export class ShareButton extends HTMLElement {
 			shareText: this.textContent ?? "Share",
 			networks,
 			isAtomic,
+			el: this,
 		});
 
 		if (!isAtomic) {
@@ -211,6 +265,8 @@ export class ShareButton extends HTMLElement {
 			popover.setAttribute("id", "share-popover");
 			popover.setAttribute("part", "share-popover");
 			popover.setAttribute("popover", "");
+			popover.setAttribute("role", "dialog");
+			popover.setAttribute("aria-label", "Share this page");
 			popover.append(popoverContent);
 			return popover;
 		}
@@ -220,3 +276,4 @@ export class ShareButton extends HTMLElement {
 }
 
 customElements.define("share-button", ShareButton);
+export { ShareButton };

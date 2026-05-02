@@ -16,6 +16,7 @@ type PopoverContent = {
 	shareText?: string;
 	networks: string;
 	isAtomic: boolean;
+	el?: HTMLElement;
 };
 
 export function createPopoverContent({
@@ -23,6 +24,7 @@ export function createPopoverContent({
 	title,
 	networks,
 	isAtomic,
+	el,
 }: PopoverContent) {
 	function createSocialMediaLink(
 		icon: string,
@@ -38,7 +40,7 @@ export function createPopoverContent({
 		const a = document.createElement("a");
 		a.classList.add("social-media", network.toLowerCase());
 		a.href = encodeURI(finalUrl);
-		a.setAttribute("aria-label", `Share on ${network}`);
+		a.setAttribute("aria-label", `Share on ${network} in a new tab`);
 		a.setAttribute("target", "_blank");
 		a.setAttribute("rel", "noopener noreferrer");
 		a.setAttribute("part", `share-link ${network.toLowerCase()}`);
@@ -146,6 +148,10 @@ export function createPopoverContent({
 
 				try {
 					await navigator.clipboard.writeText(window.location.href);
+					el?.dispatchEvent(new CustomEvent("share-button-copy", {
+						bubbles: true,
+						detail: { url: window.location.href },
+					}));
 					btn.disabled = true;
 
 					if (isAtomic) {
@@ -160,19 +166,25 @@ export function createPopoverContent({
 					}, 5000);
 				} catch (_err) {
 					console.log("[Share Button] We could not copy this");
+					btn.disabled = false;
+					btn.innerHTML = isAtomic ? initialAtomic : initial;
 				}
 			});
 			return btn;
 		}
 		const networkElement = networksMap.get(trimmedNetwork);
-		return networkElement ? networkElement.html : "";
+		if (!networkElement) {
+			console.warn(`[Share Button] Unknown network "${trimmedNetwork}" specified. Supported networks: ${[...networksMap.keys()].join(", ")}`);
+			return null;
+		}
+		return networkElement.html;
 	});
 
 	const socialMediaContainer = document.createElement("div");
 	isAtomic && socialMediaContainer.classList.add("atomic");
 	socialMediaContainer.classList.add("social-media-container");
 	socialMediaContainer.setAttribute("part", "share-social-media");
-	socialMediaContainer.append(...parsedNetworks);
+	socialMediaContainer.append(...parsedNetworks.filter(Boolean) as HTMLElement[]);
 	div.append(socialMediaContainer);
 	const triangleUp = document.createElement("div");
 	triangleUp.classList.add("triangle-up");

@@ -26,7 +26,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "test": "biome lint ./src",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format": "biome format --write ./src",
     "check": "biome format ./src",
     "build": "tsc && vite build",
@@ -35,12 +36,16 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.14",
+    "@vitest/browser": "^4.1.5",
+    "happy-dom": "^20.9.0",
+    "playwright": "^1.59.1",
     "stylelint": "^17.9.1",
     "stylelint-config-recess-order": "^7.7.0",
     "stylelint-config-standard": "^40.0.0",
     "typescript": "^6.0.3",
     "vite": "^8.0.10",
-    "vite-plugin-dts": "^5.0.0"
+    "vite-plugin-dts": "^5.0.0",
+    "vitest": "^4.1.5"
   },
   "publishConfig": {
     "access": "public"
