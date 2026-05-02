@@ -130,6 +130,7 @@ You can specify which social networks your share button shows as well as their o
 Available networks include:
 
 - X (formerly Twitter)
+- Bluesky
 - LinkedIn
 - Facebook
 - Email (opens an email client if configured)
