@@ -13,7 +13,6 @@ class ShareButton extends HTMLElement {
 	shadow = this.attachShadow({ mode: "open" });
 	state = false;
 private _connected = false;
-		private _renderRequested = false;
 		private _clickHandler: ((e: Event) => void) | null = null;
 	private _resizeHandler: (() => void) | null = null;
 	private _scrollHandler: (() => void) | null = null;
@@ -55,7 +54,7 @@ private _connected = false;
 
 	private _closePopover() {
 		const popover = this.shadow?.querySelector("[popover]") as HTMLElement | undefined;
-		if (popover && popover.popoverState === "open") {
+		if (popover?.matches(":popover-open")) {
 			popover.hidePopover();
 		}
 	}
