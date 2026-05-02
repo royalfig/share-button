@@ -27,18 +27,20 @@
   "scripts": {
     "dev": "vite",
     "test": "biome lint ./src",
+    "format": "biome format --write ./src",
+    "check": "biome format ./src",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prerelease": "git commit -am 'publish' && npm version patch && git push && git push --tags"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.0",
-    "stylelint": "^16.6.1",
-    "stylelint-config-recess-order": "^5.0.1",
-    "stylelint-config-standard": "^36.0.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.12",
-    "vite-plugin-dts": "^3.9.1"
+    "@biomejs/biome": "2.4.14",
+    "stylelint": "^17.9.1",
+    "stylelint-config-recess-order": "^7.7.0",
+    "stylelint-config-standard": "^40.0.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10",
+    "vite-plugin-dts": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"

@@ -1,9 +1,9 @@
 .wrapper {
-  --color-button-text: hsl(240deg 10% 3.9%);
-  --color-button-bg: hsl(0deg 0% 98%);
-  --color-copy-success: hsl(120deg 99% 43%);
-  --color-popover-bg: hsl(240deg 10% 3.9%);
-  --color-popover-bg-accent: hsl(240deg 3.7% 15.9%);
-  --color-popover-text: hsl(0deg 0% 98%);
-  --color-popover-border: hsl(240deg 3.7% 15.9%);
+	--color-button-text: hsl(240deg 10% 3.9%);
+	--color-button-bg: hsl(0deg 0% 98%);
+	--color-copy-success: hsl(120deg 99% 43%);
+	--color-popover-bg: hsl(240deg 10% 3.9%);
+	--color-popover-bg-accent: hsl(240deg 3.7% 15.9%);
+	--color-popover-text: hsl(0deg 0% 98%);
+	--color-popover-border: hsl(240deg 3.7% 15.9%);
 }

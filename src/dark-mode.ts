@@ -7,9 +7,9 @@ export function createDarkModeStyles(el: HTMLElement) {
 	if (darkMode === "auto") {
 		return `@media (prefers-color-scheme: dark) {
 			${darkModeStyles}
-		}`
+		}`;
 	}
-	
+
 	if (darkMode === "false") {
 		return "";
 	}

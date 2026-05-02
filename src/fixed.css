@@ -1,16 +1,16 @@
 .share-button {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  min-width: 60px;
-  height: 60px;
-  padding: 0 16px;
-  font-size: 16px;
-  box-shadow: rgb(0 0 0 / 24%) 0 8px 16px -2px;
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	min-width: 60px;
+	height: 60px;
+	padding: 0 16px;
+	font-size: 16px;
+	box-shadow: rgb(0 0 0 / 24%) 0 8px 16px -2px;
 }
 
 .share-button svg {
-  width: 24px;
-  height: 24px;
-  margin-inline-end: 0;
+	width: 24px;
+	height: 24px;
+	margin-inline-end: 0;
 }
