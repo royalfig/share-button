@@ -8,6 +8,7 @@ import {
 	telegramIcon,
 	emailIcon,
 	bsIcon,
+	threadsIcon,
 } from "./icons";
 
 type PopoverContent = {
@@ -120,6 +121,16 @@ export function createPopoverContent({
 				),
 			},
 		],
+		[
+			"threads",
+			{
+				html: createSocialMediaLink(
+					threadsIcon,
+					"Threads",
+					"https://www.threads.com/intent/post?text={{text}}&url={{url}}",
+				),
+			},
+		],
 		["copy", { html: createSocialMediaLink(copyIcon, "copy", "") }],
 	]);
 
@@ -148,10 +159,12 @@ export function createPopoverContent({
 
 				try {
 					await navigator.clipboard.writeText(window.location.href);
-					el?.dispatchEvent(new CustomEvent("share-button-copy", {
-						bubbles: true,
-						detail: { url: window.location.href },
-					}));
+					el?.dispatchEvent(
+						new CustomEvent("share-button-copy", {
+							bubbles: true,
+							detail: { url: window.location.href },
+						}),
+					);
 					btn.disabled = true;
 
 					if (isAtomic) {
@@ -174,7 +187,9 @@ export function createPopoverContent({
 		}
 		const networkElement = networksMap.get(trimmedNetwork);
 		if (!networkElement) {
-			console.warn(`[Share Button] Unknown network "${trimmedNetwork}" specified. Supported networks: ${[...networksMap.keys()].join(", ")}`);
+			console.warn(
+				`[Share Button] Unknown network "${trimmedNetwork}" specified. Supported networks: ${[...networksMap.keys()].join(", ")}`,
+			);
 			return null;
 		}
 		return networkElement.html;
@@ -184,7 +199,9 @@ export function createPopoverContent({
 	isAtomic && socialMediaContainer.classList.add("atomic");
 	socialMediaContainer.classList.add("social-media-container");
 	socialMediaContainer.setAttribute("part", "share-social-media");
-	socialMediaContainer.append(...parsedNetworks.filter(Boolean) as HTMLElement[]);
+	socialMediaContainer.append(
+		...(parsedNetworks.filter(Boolean) as HTMLElement[]),
+	);
 	div.append(socialMediaContainer);
 	const triangleUp = document.createElement("div");
 	triangleUp.classList.add("triangle-up");

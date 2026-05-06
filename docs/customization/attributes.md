@@ -131,6 +131,7 @@ Available networks include:
 
 - X (formerly Twitter)
 - Bluesky
+- Threads
 - LinkedIn
 - Facebook
 - Email (opens an email client if configured)

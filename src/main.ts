@@ -12,8 +12,8 @@ class ShareButton extends HTMLElement {
 		navigator.share;
 	shadow = this.attachShadow({ mode: "open" });
 	state = false;
-private _connected = false;
-		private _clickHandler: ((e: Event) => void) | null = null;
+	private _connected = false;
+	private _clickHandler: ((e: Event) => void) | null = null;
 	private _resizeHandler: (() => void) | null = null;
 	private _scrollHandler: (() => void) | null = null;
 	private _stylesheet: CSSStyleSheet | null = null;
@@ -46,14 +46,20 @@ private _connected = false;
 		this._scrollHandler && removeEventListener("scroll", this._scrollHandler);
 	}
 
-	attributeChangedCallback(_attrName: string, oldVal: string | null, newVal: string | null) {
+	attributeChangedCallback(
+		_attrName: string,
+		oldVal: string | null,
+		newVal: string | null,
+	) {
 		if (oldVal === newVal) return;
 		if (!this._connected) return;
 		this.render();
 	}
 
 	private _closePopover() {
-		const popover = this.shadow?.querySelector("[popover]") as HTMLElement | undefined;
+		const popover = this.shadow?.querySelector("[popover]") as
+			| HTMLElement
+			| undefined;
 		if (popover?.matches(":popover-open")) {
 			popover.hidePopover();
 		}
@@ -106,11 +112,15 @@ private _connected = false;
 							title,
 							url: window.location.href,
 						});
-						this.dispatchEvent(new CustomEvent("share-button-share", {
-							bubbles: true,
-							detail: { network: "native", url: window.location.href },
-						}));
-						const mobilePopover = this.shadow?.querySelector("[popover]") as HTMLElement | undefined;
+						this.dispatchEvent(
+							new CustomEvent("share-button-share", {
+								bubbles: true,
+								detail: { network: "native", url: window.location.href },
+							}),
+						);
+						const mobilePopover = this.shadow?.querySelector("[popover]") as
+							| HTMLElement
+							| undefined;
 						mobilePopover?.hidePopover();
 					} catch (err) {
 						console.log(err);
@@ -119,7 +129,7 @@ private _connected = false;
 				}
 
 				if (this.isPopoverSupport) {
-const popoverClone = popover.cloneNode(true) as HTMLElement;
+					const popoverClone = popover.cloneNode(true) as HTMLElement;
 					popoverClone.removeAttribute("id");
 					popoverClone.removeAttribute("popover");
 					wrapper.append(popoverClone);
@@ -161,10 +171,12 @@ const popoverClone = popover.cloneNode(true) as HTMLElement;
 
 				try {
 					await navigator.clipboard.writeText(window.location.href);
-					this.dispatchEvent(new CustomEvent("share-button-copy", {
-						bubbles: true,
-						detail: { url: window.location.href },
-					}));
+					this.dispatchEvent(
+						new CustomEvent("share-button-copy", {
+							bubbles: true,
+							detail: { url: window.location.href },
+						}),
+					);
 					const copySuccessIndicator = document.createElement("span");
 					copySuccessIndicator.setAttribute("part", "copy-success");
 					copySuccessIndicator.textContent = "Copied!";
@@ -249,7 +261,7 @@ const popoverClone = popover.cloneNode(true) as HTMLElement;
 	createPopover(title: string, isAtomic = false) {
 		const networks =
 			this.getAttribute("networks") ||
-			"x, bluesky, linkedin, facebook, email, whatsapp, telegram, copy";
+			"x, bluesky, linkedin, facebook, email, whatsapp, telegram, threads, copy";
 		const popoverContent = createPopoverContent({
 			url: window.location.href,
 			title,
