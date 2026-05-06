@@ -30,13 +30,18 @@ features:
     details: Great out of the box styles with the ability to match your site's design
   - icon: 🔋
     title: Batteries included
-    details: 1-click share to X, Bluesky, LinkedIn, Facebook, Email, WhatsApp, Telegram, and link copy.
+    details: 1-click share to X, Bluesky, Threads, LinkedIn, Facebook, Email, WhatsApp, Telegram, and link copy.
 ---
 
 <style>
   :root {
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(120deg in oklch, #EA8824, #8FA402, #F02C69, #BE16FD, #370E9F  );
+}
+
+.action {
+  padding: 6px;
+  flex-shrink: 0;
 }
 </style>
 

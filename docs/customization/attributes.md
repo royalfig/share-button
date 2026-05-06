@@ -144,12 +144,12 @@ By default, all options are present, in the order above.
 To customize networks and their order, use the `networks` attribute and pass in the desired networks in a comma-separated list. Networks will appear in the same order as entered.
 
 ```html
-<share-button networks="email,copy,facebook"></share-button>
+<share-button networks="email,copy,facebook,threads"></share-button>
 ```
 
 <ClientOnly>
 <div class="sb-container">
-<share-button networks="email,copy,facebook"></share-button>
+<share-button networks="email,copy,facebook,threads"></share-button>
 </div>
 </ClientOnly>
 

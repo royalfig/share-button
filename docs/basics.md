@@ -19,7 +19,7 @@ After [installing](./install.md) the button, add the `share-button` whereever yo
 
 When on an iOS or Android device, clicking the share button triggers the [native share menu](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API), which provides a wide range of sharing opportunities and seamless experience.
 
-When on other platforms, where the share menu isn't as well implemented, the button triggers a popover menu that supports sharing to X, Bluesky, Facebook, LinkedIn, WhatsApp, Telegram, Email, and copying the link (or [any mixture of these you choose](./customization/attributes#networks)). 
+When on other platforms, where the share menu isn't as well implemented, the button triggers a popover menu that supports sharing to X, Bluesky, Threads, Facebook, LinkedIn, WhatsApp, Telegram, Email, and copying the link (or [any mixture of these you choose](./customization/attributes#networks)). 
 
 ## Fully customizable
 
