@@ -8,7 +8,7 @@
     "docs:preview": "vitepress preview"
   },
   "dependencies": {
-    "@royalfig/share-button": "latest"
+    "@royalfig/share-button": "^2.1.0"
   },
   "version": "0.0.1"
 }
