@@ -35,7 +35,7 @@
     "prerelease": "git commit -am 'publish' && npm version patch && git push && git push --tags"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.14",
+    "@biomejs/biome": "2.4.15",
     "@vitest/browser": "^4.1.5",
     "happy-dom": "^20.9.0",
     "playwright": "^1.59.1",
