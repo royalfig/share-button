@@ -35,7 +35,7 @@
     "check": "biome format ./src",
     "build": "tsc && vite build && tsc -p tsconfig.build.json",
     "preview": "vite preview",
-    "prerelease": "git commit -am 'publish' && npm version patch && git push && git push --tags"
+    "prerelease": "(git diff --quiet HEAD || git commit -am \"publish\") && npm version patch && git push && git push --tags"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
