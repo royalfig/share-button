@@ -9,8 +9,10 @@
   ],
   "module": "./dist/share-button.es.js",
   "main": "./dist/share-button.umd.js",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "import": "./dist/share-button.es.js",
       "require": "./dist/share-button.umd.js"
     }
@@ -30,22 +32,21 @@
     "test:watch": "vitest",
     "format": "biome format --write ./src",
     "check": "biome format ./src",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && tsc -p tsconfig.build.json",
     "preview": "vite preview",
     "prerelease": "git commit -am 'publish' && npm version patch && git push && git push --tags"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.14",
-    "@vitest/browser": "^4.1.5",
-    "happy-dom": "^20.9.0",
-    "playwright": "^1.59.1",
-    "stylelint": "^17.9.1",
-    "stylelint-config-recess-order": "^7.7.0",
-    "stylelint-config-standard": "^40.0.0",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.10",
-    "vite-plugin-dts": "^5.0.0",
-    "vitest": "^4.1.5"
+    "@biomejs/biome": "2.6.6",
+    "@vitest/browser": "^5.1.0",
+    "happy-dom": "^21.0.4",
+    "playwright": "^1.65.0",
+    "stylelint": "^18.0.0",
+    "stylelint-config-recess-order": "^7.10.0",
+    "stylelint-config-standard": "^41.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
   },
   "publishConfig": {
     "access": "public"
