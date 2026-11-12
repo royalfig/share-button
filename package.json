@@ -4,7 +4,7 @@
   "version": "2.1.5",
   "type": "module",
   "private": false,
-  "packageManager": "pnpm@11.9.0",
+  "packageManager": "pnpm@12.18.0",
   "files": [
     "dist"
   ],
