@@ -21,17 +21,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: pnpm
           registry-url: https://registry.npmjs.org/
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm build
 
+      # Authenticates via npm trusted publishing (OIDC), no token needed
       - name: Publish to npm
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
 
       - name: Create Release
         env:
