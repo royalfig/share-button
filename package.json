@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
-    "@vitest/browser": "^5.1.0",
+    "@vitest/browser": "^4.1.5",
     "happy-dom": "^21.0.4",
     "playwright": "^1.65.0",
     "stylelint": "^18.0.0",
