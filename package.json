@@ -1,7 +1,7 @@
 {
   "name": "@royalfig/share-button",
   "description": "Adds a web-component share button to your website",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "type": "module",
   "private": false,
   "packageManager": "pnpm@11.9.0",
